@@ -3,7 +3,7 @@
 
 import logging
 import traceback
-from typing import Optional, List
+from typing import Optional, List, Callable
 from argparse import Namespace
 
 from . import MythrilDisassembler
@@ -20,6 +20,9 @@ from mythril.laser.smt import SolverStatistics
 from mythril.support.start_time import StartTime
 from mythril.exceptions import DetectorNotFoundError
 from mythril.laser.execution_info import ExecutionInfo
+
+from mythril.analysis.module import ModuleLoader
+from mythril.analysis.module.base import EntryPoint
 
 log = logging.getLogger(__name__)
 
@@ -61,6 +64,11 @@ class MythrilAnalyzer:
             if cmd_args.custom_modules_directory
             else ""
         )
+
+        self.solidity_files = None
+        if cmd_args.solidity_files:
+            self.solidity_files = cmd_args.solidity_files
+
         args.pruning_factor = cmd_args.pruning_factor
         args.solver_timeout = cmd_args.solver_timeout
         args.parallel_solving = cmd_args.parallel_solving
@@ -147,6 +155,17 @@ class MythrilAnalyzer:
         SolverStatistics().enabled = True
         exceptions = []
         execution_info = None  # type: Optional[List[ExecutionInfo]]
+
+        # EntryPoint Compile 실행 위치
+        compile_hooks: List[Callable] = []
+        for module in ModuleLoader().get_detection_modules(entry_point=EntryPoint.COMPILE):
+            compile_hooks.append(module.detect_source_code)
+        path = ""
+        if self.solidity_files:
+            path = self.solidity_files[0]
+            for hook in compile_hooks:
+                hook(path)
+
         for contract in self.contracts:
             StartTime()  # Reinitialize start time for new contracts
             try:

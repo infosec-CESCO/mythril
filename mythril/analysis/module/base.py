@@ -26,6 +26,7 @@ class EntryPoint(Enum):
 
     POST = 1
     CALLBACK = 2
+    COMPILE = 3
 
 
 class DetectionModule(ABC):
@@ -94,6 +95,15 @@ class DetectionModule(ABC):
             if self.auto_cache:
                 self.update_cache(result)
             self.issues += result
+
+        return result
+    
+    def detect_source_code(self, target: str) -> Optional[List[Issue]]:
+        log.debug("Entering analysis module: {}".format(self.__class__.__name__))
+
+        result = self._execute(target)
+        log.debug("Exiting analysis module: {}".format(self.__class__.__name__))
+        self.issues += result
 
         return result
 

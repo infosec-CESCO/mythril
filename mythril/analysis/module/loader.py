@@ -21,6 +21,12 @@ from mythril.analysis.module.modules.suicide import AccidentallyKillable
 from mythril.analysis.module.modules.unchecked_retval import UncheckedRetval
 from mythril.analysis.module.modules.user_assertions import UserAssertions
 
+# -----------------------------------------우리가 개발한 모듈-----------------------------------------------------------------#
+from mythril.analysis.module.modules.deprecated_functions import DeprecatedFunctionsUsage
+from mythril.analysis.module.modules.function_visibility import CheckVisibility
+from mythril.analysis.module.modules.old_compiler import CheckOldCompiler
+from mythril.analysis.module.modules.requirement_violation import ReViolation
+
 from mythril.analysis.module.base import EntryPoint
 
 from mythril.exceptions import DetectorNotFoundError
@@ -82,6 +88,19 @@ class ModuleLoader(object, metaclass=Singleton):
                 for module in result
                 if type(module).__name__ != "IntegerArithmetics"
             ]
+        if args.use_deprecated_functions_module is False:
+            result = [
+                module
+                for module in result
+                if type(module).__name__ != "DeprecatedFunctionsUsage"
+            ]
+        if args.use_functions_visibility_module is False:
+            result = [
+                module 
+                for module in result
+                if type(module).__name__ != "CheckVisibility"
+            ]
+            
         if entry_point:
             result = [module for module in result if module.entry_point == entry_point]
 
@@ -104,5 +123,11 @@ class ModuleLoader(object, metaclass=Singleton):
                 AccidentallyKillable(),
                 UncheckedRetval(),
                 UserAssertions(),
+
+                # developed
+                DeprecatedFunctionsUsage(),
+                CheckVisibility(),
+                CheckOldCompiler(),
+                ReViolation(),
             ]
         )

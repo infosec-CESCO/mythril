@@ -199,8 +199,8 @@ class LaserEVM:
             created_account = execute_contract_creation(
                 self, creation_code, contract_name, world_state=world_state
             )
-            print("main: ", created_account.code.bytecode)
-            print("sub: ", sub_accounts[0].code.bytecode if sub_accounts is not None else "Empty Sub Contract" ) 
+            # print("main: ", created_account.code.bytecode)
+            # print("sub: ", sub_accounts[0].code.bytecode if sub_accounts is not None else "Empty Sub Contract" ) 
 
             log.info(
                 "Finished contract creation, found {} open states".format(
