@@ -303,7 +303,7 @@ class Instruction:
                         new_value = Concat(new_value, symbol_factory.BitVecVal(val, 8))
                     else:
                         new_value = Concat(new_value, val)
-
+        
             pad_length = length_of_value // 2 - len(push_value)
 
             if pad_length > 0:

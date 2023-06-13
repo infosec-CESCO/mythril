@@ -7,11 +7,15 @@ from sys import exit
 import mythril.interfaces.cli
 import time
 
+time_start = time.time()
+
+def print_time():
+   time_end = time.time()
+   print('time cost [%ds]'%(time_end-time_start))
 
 if __name__ == "__main__":
-    time_start = time.time()
-    mythril.interfaces.cli.main()
-    time_end = time.time()
-    print('time cost [%ds]'%(time_end-time_start))
-    exit()
+    
+   mythril.interfaces.cli.main()
+   print_time() 
+   exit()
 

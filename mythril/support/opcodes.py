@@ -131,8 +131,17 @@ OPCODES: Dict = {
     "INVALID": {GAS: (0, 0), STACK: (0, 0), ADDRESS: 0xFE},
 }
 
-for i in range(1, 33):
-    OPCODES[f"PUSH{i}"] = {GAS: (3, 3), STACK: Z_OPERATOR_TUPLE, ADDRESS: 0x5F + i}
+# for i in range(1, 33):
+#     OPCODES[f"PUSH{i}"] = {GAS: (3, 3), STACK: Z_OPERATOR_TUPLE, ADDRESS: 0x5F + i}
+
+# modified by kevin
+# add PUSH0 case
+for i in range(0, 33):
+    if i == 0:
+        OPCODES[f"PUSH{i}"] = {GAS: (2, 2), STACK: Z_OPERATOR_TUPLE, ADDRESS: 0x5F + i}
+    else:
+        OPCODES[f"PUSH{i}"] = {GAS: (3, 3), STACK: Z_OPERATOR_TUPLE, ADDRESS: 0x5F + i}
+
 
 for i in range(1, 17):
     OPCODES[f"DUP{i}"] = {GAS: (3, 3), STACK: (0, 0), ADDRESS: 0x7F + i}
